@@ -1,0 +1,22 @@
+{
+  "name": "pontus-backend",
+  "version": "1.1.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.3.0",
+    "@fastify/jwt": "^7.2.4",
+    "@prisma/client": "^5.13.0",
+    "bcrypt": "^5.1.0",
+    "csv-stringify": "^6.2.0",
+    "dotenv": "^16.0.0",
+    "fastify": "^4.29.1",
+    "prisma": "^5.13.0"
+  }
+}

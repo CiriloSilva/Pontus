@@ -1,0 +1,5 @@
+body{background:#fff;color:#111}
+input{padding:8px;border-radius:6px;border:1px solid #ddd}
+button{padding:8px 12px;border-radius:6px;border:0;background:#111;color:#fff}
+table th, table td{border:1px solid #eee;padding:8px;text-align:left}
+select{padding:8px;border-radius:6px;border:1px solid #ddd}
