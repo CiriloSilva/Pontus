@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
-const BACKEND = (window.__BACKEND__ || 'http://127.0.0.1:3000');
+const BACKEND =
+  window.__BACKEND__               // se quiser injetar manualmente no index.html algum dia
+  || import.meta.env.VITE_API_BASE_URL  // Vite (dev/prod)
+  || 'http://127.0.0.1:3000';      // fallback pra dev local
+
 
 // ---------- Header ----------
 function Header({ user, route, onNav, onLogout }) {
