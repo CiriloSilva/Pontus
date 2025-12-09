@@ -7,55 +7,72 @@
   <button id="btn" style="padding:12px 16px;border-radius:8px;background:#111;color:#fff;border:0">Ler NFC</button>
   <pre id="out" style="margin-top:12px;background:#fafafa;padding:12px;border-radius:8px;border:1px solid #eee"></pre>
 <script>
-const out=document.getElementById('out');
+const out = document.getElementById('out');
 const MIN_INTERVAL_MS = 500;
 const DEDUPE_UID_WINDOW_MS = 3000;
 let lastScanAt = 0;
 const lastReadByUid = {};
-document.getElementById('btn').onclick=async ()=>{ 
-  if(!('NDEFReader' in window)){ out.textContent='Web NFC não suportado neste navegador.'; return; }
-  try{
+
+const API_BASE = 'https://pontus-production.up.railway.app'; // ajusta se o host for outro
+
+document.getElementById('btn').onclick = async () => { 
+  if (!('NDEFReader' in window)) {
+    out.textContent = 'Web NFC não suportado neste navegador.';
+    return;
+  }
+
+  try {
     const ndef = new NDEFReader();
     await ndef.scan();
-    out.textContent='Aproxime a tag...';
+    out.textContent = 'Aproxime a tag...';
+
     ndef.onreading = async (event) => {
       const now = Date.now();
-      if(now - lastScanAt < MIN_INTERVAL_MS){ out.textContent='Ignorado (scan rápido).'; return; }
+      if (now - lastScanAt < MIN_INTERVAL_MS) {
+        out.textContent = 'Ignorado (scan rápido).';
+        return;
+      }
       lastScanAt = now;
-      const uid = event.serialNumber || 'unknown';
-      if(lastReadByUid[uid] && (now - lastReadByUid[uid] < DEDUPE_UID_WINDOW_MS)){ out.textContent='UID '+uid+' já lido há pouco.'; return; }
-      lastReadByUid[uid] = now;
-      out.textContent = 'UID: '+uid+' — Enviando...';
-      try {
-        const API_BASE = 'https://pontus-production.up.railway.app'; // ajusta se o host for outro
 
+      const uid = event.serialNumber || 'unknown';
+
+      if (lastReadByUid[uid] && (now - lastReadByUid[uid] < DEDUPE_UID_WINDOW_MS)) {
+        out.textContent = 'UID ' + uid + ' já lido há pouco.';
+        return;
+      }
+      lastReadByUid[uid] = now;
+
+      out.textContent = 'UID: ' + uid + ' — Enviando...';
+
+      try {
         const res = await fetch(`${API_BASE}/api/registro`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ uid, timestamp: now, device: 'web-nfc-https' })
         });
 
-        let j;
+        // Lê como texto primeiro pra evitar aquele SyntaxError feio
         const text = await res.text();
+        let j;
         try {
           j = JSON.parse(text);
-        } catch {
-          throw new Error(`Resposta não é JSON. Status ${res.status}. Corpo: ${text.slice(0, 80)}...`);
+        } catch (e) {
+          throw new Error(`Resposta não é JSON (status ${res.status}): ${text.slice(0, 80)}...`);
         }
 
         if (j.ignored) {
-          out.textContent = 'Leitura ignorada (duplicada). ' + (j.user ? ('Usuário: '+j.user.name) : '');
+          out.textContent = 'Leitura ignorada (duplicada). ' + (j.user ? ('Usuário: ' + j.user.name) : '');
         } else {
-          out.textContent = 'Ponto registrado. ' + (j.user ? ('Usuário: '+j.user.name + ' — ') : '') + 'ID: ' + j.id;
+          out.textContent = 'Ponto registrado. ' + (j.user ? ('Usuário: ' + j.user.name + ' — ') : '') + 'ID: ' + j.id;
         }
       } catch (e) {
-        out.textContent = 'Falha ao enviar: ' + e;
+        out.textContent = 'Falha ao enviar: ' + e.message;
         delete lastReadByUid[uid];
       }
-
-      catch(e){ out.textContent = 'Falha ao enviar: '+e; delete lastReadByUid[uid]; }
     };
-  }catch(err){ out.textContent = 'Erro iniciando leitura NFC: '+err; }
+  } catch (err) {
+    out.textContent = 'Erro iniciando leitura NFC: ' + err;
+  }
 };
 </script>
 </body>
