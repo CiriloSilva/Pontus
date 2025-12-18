@@ -1,6 +1,10 @@
 # Pontus — Web NFC Attendance System  
 
-🌍 **Live Demo / Produção**
+![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-18.x-339933?logo=node.js)
+![Fastify](https://img.shields.io/badge/Fastify-4.x-000000?logo=fastify)
+
+**Live Demo / Produção**
 
 | Módulo    | URL                                              |
 |-----------|--------------------------------------------------|
@@ -12,7 +16,7 @@ Repositório GitHub: https://github.com/CiriloSilva/Pontus
 
 ---
 
-## 📌 Sobre o projeto (PT-BR)
+## Sobre o projeto (PT-BR)
 
 O **Pontus** é um sistema completo de registro de ponto utilizando cartões/pulseiras RFID NFC, usando **Web NFC** (Android + Chrome) como leitor.
 
@@ -269,13 +273,7 @@ Usuário admin padrão (via seed):
 
 ---
 
-## 🔐 Notas de segurança
-
-- **JWT_SECRET** nunca deve ir para o frontend nem ser commitado.
-- Variáveis sensíveis (`DATABASE_URL`, segredos, etc.) devem ficar apenas no backend (.env / Railway).
-- As variáveis `VITE_` usadas no frontend são públicas (ex.: URL do backend) – isso é esperado.
-- Recomenda-se usar HTTPS sempre (Vercel e Railway já fornecem HTTPS).
-- Em um ambiente real, limite origens de CORS para domínios confiáveis.
+## Notas
 
 No backend, atualmente:
 
