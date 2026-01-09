@@ -344,7 +344,7 @@ Mobile (Expo):
 
 ---
 
-## 📝 Autor / Contexto
+## Autor / Contexto
 
 Projeto acadêmico/experimental desenvolvido para disciplina de Projeto Integrador para estudo de:
 
